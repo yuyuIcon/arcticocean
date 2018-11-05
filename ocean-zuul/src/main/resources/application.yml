@@ -1,0 +1,20 @@
+server:
+  port: 8882
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
+
+spring:
+  application:
+    name: ocean-zuul
+
+zuul:
+  routes:
+    api-a:
+      path: /api-a/**
+      serviceId: ocean-ribbon
+    api-b:
+      path: /api-b/**
+      serviceId: ocean-feign

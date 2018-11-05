@@ -1,0 +1,11 @@
+server:
+  port: 8884
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
+
+spring:
+  application:
+    name: ocean-ribbon

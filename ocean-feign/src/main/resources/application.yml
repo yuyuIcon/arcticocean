@@ -1,0 +1,15 @@
+server:
+  port: 8883
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
+
+spring:
+  application:
+    name: ocean-feign
+
+feign:
+  hystrix:
+    enabled: true

@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: ocean-bus
+
+  cloud:
+    config:
+      label: master
+      profile: dev
+
+      discovery:
+        enabled: true
+        serviceId: ocean-config
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: localhost:9092
+          zkNodes: localhost:2181,localhost:2182,localhost:2183
+          configuration:
+            auto:
+              offset:
+                reset: latest
+      bus:
+        enabled: true
+        trace:
+          enabled: true
+server:
+  port: 8887
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
