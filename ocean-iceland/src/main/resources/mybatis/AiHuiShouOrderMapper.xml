@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.dao.mapper.AiHuiShouOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.ocean.model.pojo.AiHuiShouOrder">
+
+        <id column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="request_id" property="requestId" jdbcType="VARCHAR"/>
+        <result column="product_name" property="productName" jdbcType="VARCHAR"/>
+        <result column="brand_name" property="brandName" jdbcType="VARCHAR"/>
+
+        <result column="category_name" property="categoryName" jdbcType="VARCHAR"/>
+        <result column="sku_name" property="skuName" jdbcType="VARCHAR"/>
+        <result column="inspection_amount" property="inspectionAmount" jdbcType="DECIMAL"/>
+        <result column="final_amount" property="finalAmount" jdbcType="DECIMAL"/>
+        <result column="submited_amount" property="submitedAmount" jdbcType="DECIMAL"/>
+
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="VARCHAR"/>
+        <result column="completed_at" property="completedAt" jdbcType="BIGINT"/>
+        <result column="updated_at" property="updatedAt" jdbcType="VARCHAR"/>
+        <result column="timestamp" property="timestamp" jdbcType="INTEGER"/>
+
+        <result column="sign" property="sign" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        order_no, mobile, request_id, product_name, brand_name, category_name, sku_name, inspection_amount, final_amount, submited_amount,
+        status, created_at, completed_at, updated_at, timestamp, sign, create_time, update_time
+    </sql>
+
+    <select id="getAllOrders" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List"/>
+        from aihuishou_order
+        order by created_at desc
+    </select>
+
+    <select id="searchOrders" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from aihuishou_order
+        <where>
+            <if test="orderNo!=null and orderNo!='' ">
+                order_no = #{orderNo, jdbcType=VARCHAR}
+            </if>
+            <if test="mobile!=null and mobile!='' ">
+                mobile = #{mobile, jdbcType=VARCHAR}
+            </if>
+            <if test="productName!=null and productName!='' ">
+                product_name like CONCAT('%',#{productName, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="brandName!=null and brandName!='' ">
+                brand_name like CONCAT('%', #{brandName, jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="categoryName!=null and categoryName!='' ">
+                category_name like CONCAT('%', #{categoryName, jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="skuName!=null and skuName!='' ">
+                sku_name like CONCAT('%', #{skuName, jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="finalAmount!=null and finalAmount!='' ">
+                final_amount = #{finalAmount, jdbcType=VARCHAR}
+            </if>
+            <if test="status!=null and status!='' ">
+                status = #{status, jdbcType=VARCHAR}
+            </if>
+            <if test="beginCreatedAt!=null and beginCreatedAt!='' ">
+                created_at &gt;= #{beginCreatedAt, jdbcType=VARCHAR}
+            </if>
+            <if test="endCreatedAt!=null and endCreatedAt!='' ">
+                created_at &lt;= #{endCreatedAt, jdbcType=VARCHAR}
+            </if>
+            <if test="beginCompletedAt!=null and beginCompletedAt!='' ">
+                completed_at &gt;= #{beginCompletedAt, jdbcType=VARCHAR}
+            </if>
+            <if test="endCompletedAt!=null and endCompletedAt!='' ">
+                completed_at &lt;= #{endCompletedAt, jdbcType=VARCHAR}
+            </if>
+            <if test="beginCreateTime!=null and beginCreateTime!='' ">
+                create_time &gt;= #{beginCreateTime, jdbcType=VARCHAR}
+            </if>
+            <if test="endCreateTime!=null and endCreateTime!='' ">
+                create_time &lt;= #{endCreateTime, jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+        <if test="pageIndex!=null and pageRow!=null" >
+            limit #{pageIndex,jdbcType=INTEGER},#{pageRow,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="selectOrderByOrderNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List"/>
+        from aihuishou_order
+        where order_no = #{orderNo, jdbcType=VARCHAR}
+    </select>
+
+    <select id="countOrder" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select
+          count(1)
+        from aihuishou_order
+        where order_no = #{orderNo, jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectOrderByVoucherId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          o.*
+        from aihuishou_order o
+          left join aihuishou_voucher v
+            on v.order_no = o.order_no
+        where v.voucher_id = #{voucherId, jdbcType=VARCHAR};
+    </select>
+
+    <update id="updateAHSOrder" parameterType="com.ocean.model.pojo.AiHuiShouOrder">
+        update aihuishou_order
+
+        set mobile = #{mobile,jdbcType=VARCHAR},
+
+            request_id = #{requestId,jdbcType=VARCHAR},
+
+            product_name = #{productName,jdbcType=VARCHAR},
+
+            brand_name = #{brandName,jdbcType=VARCHAR},
+
+            category_name = #{categoryName,jdbcType=VARCHAR},
+
+            sku_name = #{skuName,jdbcType=VARCHAR},
+
+            inspection_amount = #{inspectionAmount,jdbcType=DECIMAL},
+
+            final_amount = #{finalAmount,jdbcType=DECIMAL},
+
+            submited_amount = #{submitedAmount,jdbcType=DECIMAL},
+
+            status = #{status,jdbcType=VARCHAR},
+
+            created_at = #{createdAt,jdbcType=VARCHAR},
+
+            completed_at = #{completedAt,jdbcType=VARCHAR},
+
+            updated_at = #{updatedAt,jdbcType=VARCHAR},
+
+            timestamp = #{timestamp,jdbcType=INTEGER},
+
+            sign = #{sign,jdbcType=VARCHAR},
+
+            update_time = #{updateTime,jdbcType=VARCHAR}
+
+        where order_no = #{orderNo, jdbcType=VARCHAR}
+
+    </update>
+
+    <insert id="insertAHSOrder" parameterType="com.ocean.model.pojo.AiHuiShouOrder">
+        insert into aihuishou_order
+          (
+            order_no,
+            mobile,
+            request_id,
+            product_name,
+            brand_name,
+            category_name,
+            sku_name,
+            inspection_amount,
+            final_amount,
+            submited_amount,
+            status,
+            created_at,
+            completed_at,
+            updated_at,
+            timestamp,
+            sign,
+            create_time,
+            update_time
+          )
+        values
+          (
+            #{orderNo, jdbcType=VARCHAR},
+            #{mobile, jdbcType=VARCHAR},
+            #{requestId, jdbcType=VARCHAR},
+            #{productName, jdbcType=VARCHAR},
+            #{brandName, jdbcType=VARCHAR},
+            #{categoryName, jdbcType=VARCHAR},
+            #{skuName, jdbcType=VARCHAR},
+            #{inspectionAmount, jdbcType=DECIMAL},
+            #{finalAmount, jdbcType=DECIMAL},
+            #{submitedAmount, jdbcType=DECIMAL},
+            #{status, jdbcType=VARCHAR},
+            #{createdAt, jdbcType=VARCHAR},
+            #{completedAt, jdbcType=VARCHAR},
+            #{updatedAt, jdbcType=VARCHAR},
+            #{timestamp, jdbcType=INTEGER},
+            #{sign, jdbcType=VARCHAR},
+            #{createTime, jdbcType=VARCHAR},
+            #{updateTime, jdbcType=VARCHAR}
+          );
+    </insert>
+
+</mapper>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.dao.mapper.OfficialKvMapper">
+
+    <resultMap id="BaseResultMap" type="com.ocean.model.pojo.OfficialKv">
+
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+        <result column="display_ageing" property="displayAgeing" jdbcType="VARCHAR"/>
+        <result column="begin_date" property="beginDate" jdbcType="VARCHAR"/>
+
+        <result column="end_date" property="endDate" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="display_order" property="displayOrder" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="picture_url" property="pictureUrl" jdbcType="VARCHAR"/>
+
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="open_type" property="openType" jdbcType="VARCHAR"/>
+        <result column="menu_id" property="menuId" jdbcType="BIGINT"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+
+        <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR"/>
+        <result column="last_modify_time" property="lastModifyTime" jdbcType="VARCHAR"/>
+        <result column="attr1" property="attr1" jdbcType="BIGINT"/>
+        <result column="attr2" property="attr2" jdbcType="VARCHAR"/>
+        <result column="attr3" property="attr3" jdbcType="VARCHAR"/>
+
+        <result column="attr4" property="attr4" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, title, subtitle, display_ageing, begin_date, end_date, description, display_order, status, picture_url,
+        url, open_type, menu_id, creator, create_time, last_modifier, last_modify_time, attr1, attr2, attr3, attr4
+    </sql>
+
+    <select id="getOfficialKvById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from niu_official_kv
+        where id=#{id};
+    </select>
+
+    <select id="getAllOfficialKvs" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List" />
+        from niu_official_kv;
+    </select>
+
+    <select id="searchOfficialKvs" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List" />
+        from niu_official_kv
+        <where>
+            <if test="id!=null and id!='' ">
+                and id=#{id, jdbcType=VARCHAR}
+            </if>
+            <if test="title!=null and title!='' ">
+                and  title like CONCAT('%',#{title, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="subtitle!=null and subtitle!='' ">
+                and subtitle like CONCAT('%',#{subtitle, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="status!=null and status!='' ">
+                and  status=#{status, jdbcType=VARCHAR}
+            </if>
+            <if test="openType!=null and openType!='' ">
+                and  open_type=#{openType, jdbcType=VARCHAR}
+            </if>
+            <if test="menuId!=null and menuId!='' ">
+                and menu_id=#{menuId, jdbcType=BIGINT}
+            </if>
+            <if test="creator!=null and creator!='' ">
+                and  creator=#{creator, jdbcType=VARCHAR}
+            </if>
+            <if test="lastModifier!=null and lastModifier!='' ">
+                and  last_modifier=#{lastModifier, jdbcType=VARCHAR}
+            </if>
+            <if test="beginDate!=null and beginDate!=''">
+                and  begin_date &gt;= #{beginDate,jdbcType=VARCHAR}
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                and  end_date &lt;= #{endDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by display_order,begin_date asc
+        <if test="pageIndex!=null and pageLimit!=null" >
+          limit #{pageIndex,jdbcType=INTEGER},#{pageLimit,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <insert id="insertOfficialKv" parameterType="com.ocean.model.pojo.OfficialKv">
+      insert into niu_official_kv (id, title, subtitle, display_ageing, begin_date,
+			end_date, description, display_order, status, picture_url,
+			url, open_type, menu_id, creator, create_time,
+			last_modifier, last_modify_time, attr1, attr2, attr3,
+			attr4)
+      values (
+			#{id,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{subtitle,jdbcType=VARCHAR},#{displayAgeing,jdbcType=VARCHAR},#{beginDate,jdbcType=VARCHAR},
+			#{endDate,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{displayOrder,jdbcType=INTEGER},#{status,jdbcType=VARCHAR},#{pictureUrl,jdbcType=VARCHAR},
+			#{url,jdbcType=VARCHAR},#{openType,jdbcType=VARCHAR},#{menuId,jdbcType=VARCHAR},#{creator,jdbcType=VARCHAR},#{createTime,jdbcType=VARCHAR},
+			#{lastModifier,jdbcType=VARCHAR},#{lastModifyTime,jdbcType=VARCHAR},#{attr1,jdbcType=VARCHAR},#{attr2,jdbcType=VARCHAR},#{attr3,jdbcType=VARCHAR},
+			#{attr4,jdbcType=VARCHAR}
+			);
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from niu_official_kv where id=#{id,jdbcType=VARCHAR};
+    </delete>
+
+    <update id="updateOfficialKv" parameterType="com.ocean.model.pojo.OfficialKv">
+        update niu_official_kv
+        <set>
+            <if test="title != null and title !='' ">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="subtitle != null and subtitle != '' ">
+                subtitle = #{subtitle,jdbcType=VARCHAR},
+            </if>
+            <if test="displayAgeing != null and displayAgeing != '' ">
+                display_ageing = #{displayAgeing,jdbcType=VARCHAR},
+            </if>
+            <if test="beginDate != null and beginDate != '' ">
+                begin_date = #{beginDate,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null and endDate != '' ">
+                end_date = #{endDate,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null and description != '' ">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="displayOrder != null and displayOrder != '' ">
+                display_order = #{displayOrder,jdbcType=INTEGER},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="pictureUrl != null and pictureUrl != ''">
+                picture_url = #{pictureUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null and url != ''">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="openType != null and openType != ''">
+                open_type = #{openType,jdbcType=VARCHAR},
+            </if>
+            <if test="menuId != null ">
+                menu_id = #{menuId,jdbcType=BIGINT},
+            </if>
+            <if test="creator != null and creator != ''">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="lastModifier != null and lastModifier != ''">
+                last_modifier = #{lastModifier,jdbcType=VARCHAR},
+            </if>
+            <if test="lastModifyTime != null and lastModifyTime != ''">
+                last_modify_time = #{lastModifyTime,jdbcType=VARCHAR},
+            </if>
+            <if test="attr1 != null and attr1 != ''">
+                attr1 = #{attr1,jdbcType=VARCHAR},
+            </if>
+            <if test="attr2 != null and attr2 != ''">
+                attr2 = #{attr2,jdbcType=VARCHAR},
+            </if>
+            <if test="attr3 != null and attr3 != ''">
+                attr3 = #{attr3,jdbcType=VARCHAR},
+            </if>
+            <if test="attr4 != null and attr4 != ''">
+                attr4 = #{attr4,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id, jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.ocean.model.pojo.OfficialKv">
+        update niu_official_kv
+        set title = #{title,jdbcType=VARCHAR},
+
+            subtitle = #{subtitle,jdbcType=VARCHAR},
+
+            display_ageing = #{displayAgeing,jdbcType=VARCHAR},
+
+            begin_date = #{beginDate,jdbcType=VARCHAR},
+
+            end_date = #{endDate,jdbcType=VARCHAR},
+
+            description = #{description,jdbcType=VARCHAR},
+
+            display_order = #{displayOrder,jdbcType=INTEGER},
+
+            status = #{status,jdbcType=VARCHAR},
+
+            picture_url = #{pictureUrl,jdbcType=VARCHAR},
+
+            url = #{url,jdbcType=VARCHAR},
+
+            open_type = #{openType,jdbcType=VARCHAR},
+
+            menu_id = #{menuId,jdbcType=BIGINT},
+
+            last_modifier = #{lastModifier,jdbcType=VARCHAR},
+
+            last_modify_time = #{lastModifyTime,jdbcType=VARCHAR},
+
+            attr1 = #{attr1,jdbcType=VARCHAR},
+
+            attr2 = #{attr2,jdbcType=VARCHAR},
+
+            attr3 = #{attr3,jdbcType=VARCHAR},
+
+            attr4 = #{attr4,jdbcType=VARCHAR}
+
+        where id = #{id, jdbcType=VARCHAR}
+    </update>
+
+</mapper>

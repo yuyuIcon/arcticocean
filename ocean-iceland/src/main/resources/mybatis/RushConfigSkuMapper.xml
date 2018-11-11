@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.dao.mapper.RushConfigSkuMapper">
+
+    <resultMap id="BaseResultMap" type="com.ocean.model.pojo.RushConfigSku">
+
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="config_id" property="configId" jdbcType="INTEGER"/>
+        <result column="sku_id" property="skuId" jdbcType="INTEGER"/>
+        <result column="sku_number" property="skuNumber" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, config_id, sku_id, sku_number, status, creator, create_time
+    </sql>
+
+    <select id="getConfigSkuById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from niu_rush_config_sku
+        where id = #{id, jdbcType=INTEGER};
+    </select>
+
+    <select id="getConfigSkuBySkuId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from niu_rush_config_sku
+        where sku_id = #{skuId, jdbcType=INTEGER};
+    </select>
+
+    <select id="getConfigSkuBySkuIds" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select
+          count(1) as count
+        from niu_rush_config_sku
+        where sku_id in (#{skuIds, jdbcType=VARCHAR})
+        and status = #{status, jdbcType=VARCHAR};
+    </select>
+
+
+    <update id="updateRushConfig" parameterType="com.ocean.model.pojo.RushConfig">
+        update niu_rush_config
+        set config_id = #{config_id, jdbcType=INTEGER},
+        sku_id = #{sku_id, jdbcType=INTEGER},
+        sku_number = #{sku_number, jdbcType=VARCHAR},
+        status = #{status, jdbcType=VARCHAR},
+        creator = #{creator, jdbcType=VARCHAR},
+        create_time = #{createTime, jdbcType=VARCHAR}
+        where id = #{id, jdbcType=INTEGER};
+
+    </update>
+
+    <insert id="insertRushConfig" parameterType="com.ocean.model.pojo.RushConfigSku">
+        insert into niu_rush_config_sku
+        (
+            id, config_id, sku_id, sku_number, status, creator, create_time
+        )
+        values
+        (
+            #{id, jdbcType=INTEGER},
+            #{configId, jdbcType=INTEGER},
+            #{skuId, jdbcType=INTEGER},
+            #{skuNumber, jdbcType=VARCHAR},
+            #{status, jdbcType=VARCHAR},
+            #{createTime, jdbcType=VARCHAR}
+        );
+    </insert>
+
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.dao.mapper.RushConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.ocean.model.pojo.RushConfig">
+
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="activity_name" property="activityName" jdbcType="VARCHAR"/>
+        <result column="limit_sku" property="limitSku" jdbcType="VARCHAR"/>
+        <result column="limit_day_quantity" property="limitDayQuantity" jdbcType="INTEGER"/>
+        <result column="limit_quantity" property="limitQuantity" jdbcType="INTEGER"/>
+
+        <result column="expire_day" property="expireDay" jdbcType="INTEGER"/>
+        <result column="expire_time" property="expireTime" jdbcType="VARCHAR"/>
+        <result column="activity_start_time" property="activityStartTime" jdbcType="VARCHAR"/>
+        <result column="activity_end_time" property="activityEndTime" jdbcType="VARCHAR"/>
+        <result column="config_code" property="configCode" jdbcType="VARCHAR"/>
+
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="category_id" property="categoryId" jdbcType="BIGINT"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, activity_name, limit_sku, limit_day_quantity, limit_quantity, expire_day, expire_time, activity_start_time,
+        activity_end_time, config_code, status, category_id, creator, create_time
+    </sql>
+
+    <select id="getRushConfigById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from niu_rush_config
+        where id = #{id, jdbcType=INTEGER}
+    </select>
+
+    <select id="getRushConfigByConfigCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from niu_rush_config
+        where config_code = #{configCode, jdbcType=VARCHAR}
+    </select>
+
+    <select id="searchRushConfigs" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from niu_rush_config
+        <where>
+            <if test="id!=null and id!='' ">
+                and id = #{id, jdbcType=INTEGER}
+            </if>
+            <if test="activityName!=null and activityName!='' ">
+                and activity_name like CONCAT('%', #{activityName, jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="limitSku!=null and limitSku!='' ">
+                and limit_sku like CONCAT('%',#{limitSku, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="limitDayQuantity!=null and limitDayQuantity!='' ">
+                and limit_day_quantity = #{limitDayQuantity, jdbcType=INTEGER}
+            </if>
+            <if test="limitQuantity!=null and limitQuantity!='' ">
+                and limit_quantity = #{limitQuantity, jdbcType=INTEGER}
+            </if>
+            <if test="expireDay!=null and expireDay!='' ">
+                and expire_day = #{expireDay, jdbcType=INTEGER}
+            </if>
+            <if test="status!=null and status!='' ">
+                and status = #{status, jdbcType=VARCHAR}
+            </if>
+            <if test="categoryId!=null and categoryId!='' ">
+                and category_id = #{categoryId, jdbcType=BIGINT}
+            </if>
+            <if test="creator!=null and creator!='' ">
+                and creator like CONCAT('%',#{creator, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="beginCreateTime!=null and beginCreateTime!='' ">
+                and create_time &gt;= #{beginCreateTime, jdbcType=VARCHAR}
+            </if>
+            <if test="endCreateTime!=null and endCreateTime!='' ">
+                and create_time &lt;= #{endCreateTime, jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+        <if test="pageIndex!=null and pageRow!=null" >
+            limit #{pageIndex,jdbcType=INTEGER},#{pageRow,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
+    <update id="updateRushConfig" parameterType="com.ocean.model.pojo.RushConfig">
+        update niu_rush_config
+        set activity_name = #{activityName, jdbcType=VARCHAR},
+        limit_sku = #{limitSku, jdbcType=VARCHAR},
+        limit_day_quantity = #{limitDayQuantity, jdbcType=INTEGER},
+        limit_quantity = #{limitQuantity, jdbcType=INTEGER},
+        expire_day = #{expireDay, jdbcType=INTEGER},
+        expire_time = #{expireTime, jdbcType=VARCHAR},
+        status = #{status, jdbcType=VARCHAR},
+        category_id = #{categoryId, jdbcType=BIGINT},
+        creator = #{creator, jdbcType=VARCHAR},
+        create_time = #{createTime, jdbcType=VARCHAR}
+        where id = #{id, jdbcType=INTEGER}
+
+    </update>
+
+    <insert id="insertRushConfig" parameterType="com.ocean.model.pojo.RushConfig">
+        insert into aihuishou_order
+        (
+            activity_name,
+            limit_sku,
+            limit_day_quantity,
+            limit_quantity,
+            expire_day,
+            expire_time,
+            activity_start_time,
+            activity_end_time,
+            config_code,
+            status,
+            category_id,
+            creator,
+            create_time
+        )
+        values
+        (
+            #{activityName, jdbcType=VARCHAR},
+            #{limitSku, jdbcType=VARCHAR},
+            #{limitDayQuantity, jdbcType=INTEGER},
+            #{limitQuantity, jdbcType=INTEGER},
+            #{expireDay, jdbcType=INTEGER},
+            #{expireTime, jdbcType=VARCHAR},
+            #{activityStartTime, jdbcType=VARCHAR},
+            #{activityEndTime, jdbcType=VARCHAR},
+            #{configCode, jdbcType=VARCHAR},
+            #{status, jdbcType=VARCHAR},
+            #{categoryId, jdbcType=BIGINT},
+            #{creator, jdbcType=VARCHAR},
+            #{createTime, jdbcType=VARCHAR}
+        );
+    </insert>
+
+</mapper>

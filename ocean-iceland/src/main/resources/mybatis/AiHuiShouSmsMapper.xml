@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.dao.mapper.AiHuiShouSmsMapper">
+
+    <resultMap id="BaseResultMap" type="com.ocean.model.pojo.AiHuiShouSms">
+
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="message" property="message" jdbcType="VARCHAR"/>
+        <result column="voucher" property="voucher" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="send_time" property="sendTime" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, mobile, message, voucher, order_no, send_time
+    </sql>
+
+    <select id="getSmsByOrderNoOrVoucher" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List"/>
+        from aihuishou_sms
+        where order_no = #{_parameter, jdbcType=VARCHAR}
+          or voucher = #{_parameter, jdbcType=VARCHAR}
+        order by send_time desc
+    </select>
+
+    <insert id="insertAHSSms" parameterType="com.ocean.model.pojo.AiHuiShouSms">
+        insert into aihuishou_sms
+          (
+            id,
+            mobile,
+            message,
+            voucher,
+            order_no,
+            send_time
+          )
+        values
+          (
+            #{id, jdbcType=BIGINT},
+            #{mobile, jdbcType=VARCHAR},
+            #{message, jdbcType=VARCHAR},
+            #{voucher, jdbcType=VARCHAR},
+            #{orderNo, jdbcType=VARCHAR},
+            #{sendTime, jdbcType=VARCHAR}
+          );
+    </insert>
+
+</mapper>

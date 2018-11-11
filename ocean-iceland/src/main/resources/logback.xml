@@ -1,0 +1,30 @@
+<configuration>
+
+    <appender name="LOGIS_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/data/logs/iceland/iceland-app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Daily rollover with compression -->
+            <fileNamePattern>/data/logs/iceland/archive/log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <!--<pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from %logger in %thread - %message%n%xException</pattern>-->
+            <pattern>%date{yyyy-MM-dd HH:mm:ss} [%-5level] from %logger{36} in %thread - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss} [%-5level] from %logger{36} in %thread - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="INFO">
+        <appender-ref ref="LOGIS_LOG"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <logger name="cn.niu.dao.mapper" level="DEBUG"></logger>
+
+</configuration>

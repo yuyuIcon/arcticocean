@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.dao.mapper.MenuMapper">
+
+    <resultMap id="BaseResultMap" type="com.ocean.model.pojo.Menu">
+        <id column="menu_id" property="menuId" jdbcType="BIGINT" />
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+        <result column="mode_type" property="modeType" jdbcType="VARCHAR"/>
+        <result column="display_order" property="displayOrder" jdbcType="INTEGER"/>
+        <result column="p_id" property="pId" jdbcType="BIGINT"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="group_id" property="groupId" jdbcType="BIGINT"/>
+        <result column="extensible" property="extensible" jdbcType="BOOLEAN"></result>
+    </resultMap>
+
+    <resultMap id="MenuVoMap" type="com.ocean.model.vo.MenuVo">
+        <id column="menu_id" property="menuId" jdbcType="BIGINT" />
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+        <result column="p_id" property="pId" jdbcType="BIGINT"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <collection property="officialKvs" column="menu_id" javaType="ArrayList"
+                    ofType="com.ocean.model.pojo.OfficialKv" select="selectOfficialKv" />
+    </resultMap>
+
+    <resultMap id="OfficialKvMap" type="com.ocean.model.pojo.OfficialKv">
+
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+        <result column="display_ageing" property="displayAgeing" jdbcType="VARCHAR"/>
+        <result column="begin_date" property="beginDate" jdbcType="VARCHAR"/>
+
+        <result column="end_date" property="endDate" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="display_order" property="displayOrder" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="picture_url" property="pictureUrl" jdbcType="VARCHAR"/>
+
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="open_type" property="openType" jdbcType="VARCHAR"/>
+        <result column="menu_id" property="menuId" jdbcType="BIGINT"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+
+        <result column="last_modifier" property="lastModifier" jdbcType="VARCHAR"/>
+        <result column="last_modify_time" property="lastModifyTime" jdbcType="VARCHAR"/>
+        <result column="attr1" property="attr1" jdbcType="BIGINT"/>
+        <result column="attr2" property="attr2" jdbcType="VARCHAR"/>
+        <result column="attr3" property="attr3" jdbcType="VARCHAR"/>
+
+        <result column="attr4" property="attr4" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        menu_id, title, subtitle, mode_type, display_order, p_id, icon, url, group_id, extensible
+    </sql>
+
+    <select id="getAllMenus" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List"/>
+        from niu_menu
+        <where>
+            1=1
+            <if test=" _parameter!=null and _parameter!=0 ">
+                and group_id=#{_parameter, jdbcType=BIGINT}
+            </if>
+        </where>
+        order by p_id,display_order asc
+    </select>
+
+    <select id="getMenusBypId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from niu_menu
+        where p_id=#{pId, jdbcType=BIGINT};
+    </select>
+
+    <select id="getMenuByMenuId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from niu_menu
+        where menu_id=#{menuId, jdbcType=BIGINT};
+    </select>
+
+    <select id="selectOfficialKv" resultMap="OfficialKvMap">
+        select
+          id, title, subtitle, display_ageing, begin_date, end_date, description, display_order, status, picture_url,
+          url, open_type, menu_id, creator, create_time, last_modifier, last_modify_time, attr1, attr2, attr3, attr4
+        from niu_official_kv
+        where menu_id=#{menu_id, jdbcType=BIGINT}
+        and (display_ageing = '02' or (display_ageing = '01' and sysdate() between begin_date and end_date))
+        and status = '01'
+        order by display_order asc
+    </select>
+
+    <select id="getMenuVoByMenuId" parameterType="java.lang.Long" resultMap="MenuVoMap">
+        select
+          menu_id, title, subtitle, p_id, url
+        from niu_menu
+        where menu_id=#{menuId, jdbcType=BIGINT}
+    </select>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.dao.mapper.RushCategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.ocean.model.pojo.RushCategory">
+
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="category_code" property="categoryCode" jdbcType="VARCHAR"/>
+        <result column="category_name" property="categoryName" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="VARCHAR"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, category_code, category_name, status, creator, gmt_create, gmt_modified
+    </sql>
+
+    <select id="getCategoryById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from niu_rush_category
+        where id = #{id, jdbcType=BIGINT};
+    </select>
+
+    <update id="updateRushCategory" parameterType="com.ocean.model.pojo.RushCategory">
+        update niu_rush_category
+        set category_code = #{categoryCode, jdbcType=VARCHAR},
+        category_name = #{categoryName, jdbcType=VARCHAR},
+        status = #{status, jdbcType=VARCHAR},
+        creator = #{creator, jdbcType=VARCHAR},
+        gmt_create = #{gmtCreate, jdbcType=VARCHAR},
+        gmt_modified = #{gmtModified, jdbcType=VARCHAR}
+        where id = #{id, jdbcType=BIGINT};
+
+    </update>
+
+    <insert id="insertRushCategory" parameterType="com.ocean.model.pojo.RushCategory">
+        insert into niu_rush_category
+        (
+            <include refid="Base_Column_List" />
+        )
+        values
+        (
+            #{id, jdbcType=BIGINT},
+            #{categoryCode, jdbcType=VARCHAR},
+            #{categoryName, jdbcType=VARCHAR},
+            #{status, jdbcType=VARCHAR},
+            #{creator, jdbcType=VARCHAR},
+            #{gmtCreate, jdbcType=VARCHAR},
+            #{gmtModified, jdbcType=VARCHAR}
+        );
+    </insert>
+
+</mapper>
